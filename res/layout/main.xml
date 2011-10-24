@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <LinearLayout  
+		android:orientation="horizontal" 
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent">
+		<EditText
+			android:id="@+id/editTextLocation"  
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"  
+			android:layout_weight="1" 
+			android:layout_gravity="center">
+				<requestFocus></requestFocus>
+		</EditText>
+		<Button
+			android:id="@+id/buttonGo"
+			android:text="Go"   
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_weight="0"
+			android:layout_gravity="center|top">
+		</Button>
+	</LinearLayout>
+    
+	<com.google.android.maps.MapView
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:enabled="true"
+				android:clickable="true"
+				android:id="@+id/theMap"
+				android:apiKey="ENTER_MAPS_API_KEY_HERE">
+	</com.google.android.maps.MapView>
+</LinearLayout>
