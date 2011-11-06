@@ -20,7 +20,7 @@ To setup this project:
 1. Download a copy of this code.
 1. Edit the `main.xml` file in `/res/layout` to add your Google Maps API Key on this line:
 
-    android:apiKey="ENTER_MAPS_API_KEY_HERE"
+    android:apiKey="ENTER_GOOGLE_MAPS_API_KEY_HERE"
 
 Usage
 -----

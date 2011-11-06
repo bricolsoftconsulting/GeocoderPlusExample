@@ -33,6 +33,6 @@
 				android:enabled="true"
 				android:clickable="true"
 				android:id="@+id/theMap"
-				android:apiKey="ENTER_MAPS_API_KEY_HERE">
+				android:apiKey="ENTER_GOOGLE_MAPS_API_KEY_HERE">
 	</com.google.android.maps.MapView>
 </LinearLayout>

@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -43,33 +42,6 @@ public class MyMapActivity extends MapActivity {
 	
 	// Members
 	private MapView mMapView;
-	private Address mAddress;
-	private List<Address> mAddresses;
-	private Handler mHandler = new Handler();
-	private Runnable mDisplayLocation = new Runnable()
-	{
-		public void run()
-		{
-			// Get the map center 
-			GeoPoint mapCenter = new GeoPoint((int) (mAddress.getLatitudeE6()), (int) (mAddress.getLongitudeE6()));
-			
-			// Get the map controller
-			MapController mapController = mMapView.getController();
-			
-			// Fix position
-			mapController.animateTo(mapCenter);
-			
-			// Fix zoom
-			mapController.zoomToSpan(mAddress.getViewPort().getLatitudeSpanE6(), mAddress.getViewPort().getLongitudeSpanE6());
-		}
-	};
-	public Runnable mSelectLocation = new Runnable()
-	{
-		public void run()
-		{
-			showLocationPicker(mAddresses);
-		}
-	};
 	
     /** Called when the activity is first created. */
     @Override
@@ -94,7 +66,7 @@ public class MyMapActivity extends MapActivity {
 				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(editTextLocation.getWindowToken(), 0);
 				
-				// Process the location string
+				// Set location name member, switch to UI thread and geocode
 				GeocodeTask geocodeTask = new GeocodeTask();
 				geocodeTask.execute(locationName);
 			}
@@ -129,6 +101,21 @@ public class MyMapActivity extends MapActivity {
 		}
 		
 		return null;
+	}
+    
+    private void displayLocation(Address address)
+	{
+		// Get the map center 
+		GeoPoint mapCenter = new GeoPoint((int) (address.getLatitudeE6()), (int) (address.getLongitudeE6()));
+			
+		// Get the map controller
+		MapController mapController = mMapView.getController();
+			
+		// Fix position
+		mapController.animateTo(mapCenter);
+			
+		// Fix zoom
+		mapController.zoomToSpan(address.getViewPort().getLatitudeSpanE6(), address.getViewPort().getLongitudeSpanE6());
 	}
     
     public class GeocodeTask extends AsyncTask<String, Void, List<Address>>
@@ -170,22 +157,13 @@ public class MyMapActivity extends MapActivity {
 			{
 				if (addresses.size() > 1)
 				{
-					// Clear address
-					mAddress = null;
-					
-					// Set addresses
-					mAddresses = addresses;
-					
 					// Determine which address to display
-					mHandler.post(mSelectLocation);
+					showLocationPicker(addresses);
 				}
 				else
 				{
-					// Set position
-					mAddress = addresses.get(0);
-					
 					// Display address
-					mHandler.post(mDisplayLocation);
+					displayLocation(addresses.get(0));
 				}
 			}
 			else
@@ -255,11 +233,8 @@ public class MyMapActivity extends MapActivity {
 		{
 			public void onClick(DialogInterface dialogInterface, int itemIndex)
 			{
-				// Set address
-				mAddress = results.get(itemIndex);
-				
 				// Display the position
-				mHandler.post(mDisplayLocation);
+				displayLocation(results.get(itemIndex));
 			}
 		});
 		builder.create().show();
